@@ -22,7 +22,8 @@ input QueryParams {
     missionName: String
     rocketName: String
     launchYear: Int
-    page: Int
+    page: Int,
+    rowsPerPage: Int
 }
 
 type Query {

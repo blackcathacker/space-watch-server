@@ -11,10 +11,8 @@ const rocketApi = 'https://api.spacexdata.com/v4/rockets'
 
 const localCache = new NodeCache({ stdTTL: 3600 })
 
-const PAGE_LENGTH = 20
-
 export async function queryLaunches(_: void, { query }: { query: Query }): Promise<QueryResponse> {
-    const { page = 1 } = query
+    const { page = 1, rowsPerPage = 20 } = query
     const { launches: apiLaunches, rockets } = await getApiData()
     const launches = apiLaunches.map(l => ({
         id: l.id,
@@ -27,9 +25,9 @@ export async function queryLaunches(_: void, { query }: { query: Query }): Promi
     })).filter(l => launchMatches(l, query))
     return {
         totalLaunches: launches.length || 0,
-        totalPages: Math.ceil(launches.length / PAGE_LENGTH),
+        totalPages: Math.ceil(launches.length / rowsPerPage),
         page,
-        launches: launches.slice(PAGE_LENGTH * (page - 1), PAGE_LENGTH * page)
+        launches: launches.slice(rowsPerPage * (page - 1), rowsPerPage * page)
     }
 }
 
